@@ -1,22 +1,36 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import FileBase from 'react-file-base64'
-import { useDispatch } from 'react-redux'
-import { createPost } from '../../action/posts'
+import { useDispatch, useSelector } from 'react-redux'
+import { createPost, updatePost } from '../../action/posts'
 
-export default function Form({currentId, setCurrentId}) {
+export default function Form({ currentId, setCurrentId }) {
     const dispatch = useDispatch()
     const [postData, setPostData] = useState({
         creator: '', title: '', content: '', tags: '', selecetedFile: '',
     })
+    const post = useSelector((state) => currentId ? state.posts.find((post) => post._id === currentId) : null)
     function handleSubmit(e) {
         e.preventDefault()
-        dispatch(createPost(postData))
-    }
-    function clear() {
 
+        if (currentId) {
+            dispatch(updatePost(currentId, postData))
+        }
+        else {
+            dispatch(createPost(postData))
+        }
+        clear()
+    }
+    useEffect(() => {
+        if (post) setPostData(post);
+
+    }, [post])
+    function clear() {
+        setCurrentId(null)
+        setPostData({ creator: '', title: '', content: '', tags: '', selecetedFile: '' })
     }
     return (
         <div className="container flex flex-col gap-y-4 bg-black p-2">
+            <div><span>{currentId ? "Editing" : "Creating"}</span></div>
             <form className="flex flex-col gap-4 gap-x-4" autoComplete="off" noValidate onSubmit={handleSubmit}>
                 <label htmlFor="title" className="text-yellow-300">Title
                 <input name="title" id="name" type="text" value={postData.title} onChange={(e) => setPostData({ ...postData, title: e.target.value })} />

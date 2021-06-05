@@ -1,16 +1,18 @@
-import React, { useState } from 'react'
-import Form from "./components/Form/Form.js";
-import Posts from "./components/Posts/Posts.js";
+import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux';
 import { getPosts } from './action/posts'
 
-export default function App() {
-    const dispatch = useDispatch()
-    const [currentId, setCurrentId] = useState(null)
+import Posts from "./components/Posts/Posts.js";
+import Form from "./components/Form/Form.js";
 
-    React.useEffect(() => {
+export default function App() {
+    const [currentId, setCurrentId] = useState(null)
+    const dispatch = useDispatch()
+
+    useEffect(() => {
         dispatch(getPosts());
-    }, [dispatch])
+    }, [currentId, dispatch]);
+
     return (
         <>
             <div className="container w-auto mx-auto md:px-4 bg-black flex justify-center ">
@@ -19,10 +21,10 @@ export default function App() {
 
             <div className="container flex flex-col-reverse w-full md:flex-row mx-auto gap-2 my-2">
                 <div className="w-full flex flex-row md:w-2/3 md:flex-col">
-                    <Posts setCurrentId={setCurrentId}/>
+                    <Posts setCurrentId={setCurrentId} />
                 </div>
                 <div className="w-full md:w-1/3">
-                    <Form currentId={currentId} setCurrentId={setCurrentId}/>
+                    <Form currentId={currentId} setCurrentId={setCurrentId} />
                 </div>
             </div>
         </>
