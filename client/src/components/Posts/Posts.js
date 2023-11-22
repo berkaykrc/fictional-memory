@@ -1,6 +1,7 @@
 import React from 'react'
 import PostCard from './PostCard/PostCard'
 import { useSelector } from 'react-redux'
+
 export default function Post({ setCurrentId }) {
     const posts = useSelector((state) => state.posts)
     return (
